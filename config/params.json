@@ -1,0 +1,5 @@
+{
+    "base_url": "https://api.opensubtitles.com/api/v1/",
+    "video_extensions": ["avi", "mp4", "mkv"],
+    "language": "es"
+}

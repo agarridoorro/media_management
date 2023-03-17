@@ -1,0 +1,1 @@
+0 18 * * *  python3 /app/main.py >>/tmp/out.log 2>/tmp/err.log
