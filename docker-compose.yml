@@ -1,13 +1,13 @@
 version: "3.7"
 services:
   subtitles:
-    image: antonio/download-subtitles
+    image: package/image_name
     container_name: subtitles
     environment:
       - PUID=1000 # User id
       - PGID=1000 # Group id
       - TZ=Europe/Madrid
     volumes:
-      - /media/hdp01/config/subtitles/config:/config
-      - /media/hdp01/series:/shows
+      - /your/config/path:/config
+      - /yout/shows/path:/shows
     restart: unless-stopped # This makes sure that the application restarts when it crashes
