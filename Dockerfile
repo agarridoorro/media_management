@@ -17,4 +17,4 @@ RUN crontab /app/mycron
 RUN touch /tmp/out.log
 
 # Start TAIL - as your always-on process (otherwise - container exits right after start)
-CMD python3 /app/init.py;python3 /app/main.py;crond && tail -f /tmp/out.log
+CMD python3 /app/init.py;crond && tail -f /tmp/out.log

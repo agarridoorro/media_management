@@ -1,6 +1,7 @@
 import os
-import sys
 from threading import Lock
+from .log import Logger
+from . import *
 
 class SingletonMeta(type):
     _instances = {}
@@ -18,24 +19,22 @@ class SingletonMeta(type):
         return cls._instances[cls]
 
 class Configuration(metaclass=SingletonMeta):
-    def __init__(self):
-        self.auth = _Reader('/config/auth.json')
-        self.params = _Reader('/config/params.json')
+    def __init__(self, entity):
+        self.auth = _CfgMap(CONFIG_PATH, entity, 'auth.json')
+        self.params = _CfgMap(CONFIG_PATH, entity, 'params.json')
 
-class _Reader(object):
-    def __init__(self, file_name):
+class _CfgMap(object):
+    def __init__(self, base_path, entity, relative_path):
         try:
             self._values_dic = []
-            self._file_name = os.path.join(os.path.dirname(os.path.realpath(__file__)), file_name)
-            with open(file_name, 'r') as dictionary_file:
+            self._file_name = os.path.join(base_path, entity, relative_path)
+            with open(self._file_name, 'r') as dictionary_file:
                 self._values_dic = eval(dictionary_file.read())
         except FileNotFoundError:
-            print("No config file found at [" + self._file_name + "]")
-            sys.exit(100)
+            Logger.error("No config file found at [", self._file_name, "]")
         
     def get(self, key):
         try:
             return self._values_dic[key]
         except KeyError:
-            print("Key [" + key + "] is not present in [" + self._file_name + "]")
-            sys.exit(100)
+            Logger.error("Key [", key, "] is not present in [", self._file_name, "]")

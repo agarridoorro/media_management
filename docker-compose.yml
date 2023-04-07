@@ -1,13 +1,13 @@
 version: "3.7"
 services:
   subtitles:
-    image: package/image_name
-    container_name: subtitles
+    image: antonio/media-management
+    container_name: media_management
     environment:
       - PUID=1000 # User id
       - PGID=1000 # Group id
       - TZ=Europe/Madrid
     volumes:
       - /your/config/path:/config
-      - /yout/shows/path:/shows
+      - /yout/shows/path:/shows # Only in case you want to download subtitles
     restart: unless-stopped # This makes sure that the application restarts when it crashes

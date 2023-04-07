@@ -1,12 +1,15 @@
-import os
-import shutil
-from datetime import datetime
+from common.log import Logger
+from common.module import ModuleCreator
 
-print(datetime.now(), "Initializing...")
+Logger.info('Initializing modules...')
 
-if not os.path.isfile('/config/auth.json'):
-    shutil.copyfile('/app/config/auth.json', '/config/auth.json')
-    print ('Created /config/auth.json')
-if not os.path.isfile('/config/params.json'):
-    shutil.copyfile('/app/config/params.json', '/config/params.json')
-    print ('Created /config/params.json')
+file_cron = open('mycron')
+lines = file_cron.readlines()
+for line in lines:
+    if not line.startswith('#') and ' python3 /app/entry_point.py ' in line:
+        parts = line.split(' ')
+        index_entry_point = parts.index('/app/entry_point.py')
+        action_name = parts[index_entry_point + 1]
+        Logger.info("Initializing module", action_name)
+        module_creator = ModuleCreator(action_name)
+        module_creator.get_module()

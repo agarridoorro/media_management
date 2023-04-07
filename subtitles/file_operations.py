@@ -3,25 +3,7 @@ import os
 import hashlib
 import zlib
 import base64
-from platform import python_version_tuple
-from warnings import warn
-
-try:
-    if int(python_version_tuple()[0]) < 3:
-        raise ImportError
-    from charset_normalizer import detect
-except ImportError:
-    try:
-        from cchardet import detect
-    except ImportError:
-        try:
-            from chardet import detect
-            warn('python chardet is installed but could be unreliable, upgrade to python 3 and install '
-                 'charset-normalizer or cchardet.')
-        except ImportError:
-            def detect(bytes_str):
-                return None
-
+from charset_normalizer import detect
 
 def decompress(data, enable_encoding_guessing=True, encoding='utf-8'):
     """

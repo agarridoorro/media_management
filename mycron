@@ -1,1 +1,4 @@
-0 18 * * *  python3 /app/main.py >>/tmp/out.log 2>/tmp/err.log
+# Every day at 18:00, download subtitles
+0 18 * * *  python3 /app/entry_point.py subtitles.actions.DownloadAction >>/tmp/out.log 2>/tmp/err.log
+# Every 15 minutes, try to clean transmission
+*/15 * * * *  python3 /app/entry_point.py transmission.actions.CleanAction >>/tmp/out.log 2>/tmp/err.log

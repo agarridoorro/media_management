@@ -1,12 +1,11 @@
-from FileOperations import File
-from configuration import Configuration
-#from urllib.parse import urlencode
-
 import os
 import requests
 import requests_cache
 import json
-import sys
+
+from common.configuration import Configuration
+from common.log import Logger
+from .file_operations import File
 
 class OpenSubtitles(object):
 
@@ -25,7 +24,7 @@ class OpenSubtitles(object):
         self.sublanguage = ""
         self.forced = ""
 
-        cfg = Configuration()
+        cfg = Configuration("subtitles")
         self.username = cfg.auth.get('username')
         self.password = cfg.auth.get('password')
         self.apikey = cfg.auth.get('api-key')
@@ -119,7 +118,7 @@ class OpenSubtitles(object):
         except ValueError as e:
             raise SystemExit("Failed to parse search_subtitle JSON response: " + e)
         except IndexError as inerr:
-            print("No subtitle found at OpenSubtitles for " + self.file_name)
+            Logger.warn("No subtitle found at OpenSubtitles for", self.file_name)
 
 
 
@@ -144,7 +143,7 @@ class OpenSubtitles(object):
 
         # dont download if subtitle already exists
         if os.path.exists(download_directory + os.path.sep + download_filename) and not overwrite:
-            print("Subtitle file " + download_directory + os.path.sep + download_filename + " already exists")
+            Logger.warn("Subtitle file", download_directory + os.path.sep + download_filename, "already exists")
             return None
 
         # only download if user has download credits remaining
@@ -163,9 +162,9 @@ class OpenSubtitles(object):
                 download_remote_file = requests.get(download_link)
                 try:
                     open(download_directory + os.path.sep + download_filename, 'wb').write(download_remote_file.content)
-                    print("Saved subtitle to " + download_directory + os.path.sep + download_filename)
+                    Logger.info("Saved subtitle to", download_directory + os.path.sep + download_filename)
                 except IOError:
-                    print("Failed to save subtitle to " + download_directory + os.path.sep + download_filename)
+                    Logger.info("Failed to save subtitle to", download_directory + os.path.sep + download_filename)
 
 
             except requests.exceptions.HTTPError as httperr:
@@ -175,5 +174,4 @@ class OpenSubtitles(object):
             except ValueError as e:
                 raise SystemExit("Failed to parse search_subtitle JSON response: " + e)
         else:
-            print("Download limit reached. Please upgrade your account or wait for your quota to reset (~24hrs)")
-            sys.exit(0)
+            Logger.error("Download limit reached. Please upgrade your account or wait for your quota to reset (~24hrs)")
