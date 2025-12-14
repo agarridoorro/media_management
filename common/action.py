@@ -3,26 +3,26 @@ from abc import ABC, abstractmethod
 
 class GenericAction(ABC):
 
-    def init(self, *args, **kwargs):
+    def init(self):
         class_name = f"{self.__class__.__module__}.{self.__class__.__qualname__}"
         Logger.info(f"Initializing {class_name}")
         try:
-            return self._init(*args, **kwargs)
+            return self._init()
         finally:
             Logger.info(f"Initialized {class_name}")
 
     @abstractmethod
-    def _init(self, *args, **kwargs):
+    def _init(self):
         pass
 
-    def execute(self, *args, **kwargs):
+    def execute(self):
         class_name = f"{self.__class__.__module__}.{self.__class__.__qualname__}"
         Logger.info(f"Executing {class_name}")
         try:
-            return self._execute(*args, **kwargs)
+            return self._execute()
         finally:
             Logger.info(f"Executed {class_name}")        
 
     @abstractmethod
-    def _execute(self, *args, **kwargs):
+    def _execute(self):
         pass
