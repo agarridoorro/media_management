@@ -4,13 +4,14 @@ from common.log import Logger
 from common.action import GenericAction
 from common.configuration import Configuration
 from .open_subtitles import OpenSubtitles
+from .init import Initializer
 
 class DownloadAction(GenericAction):
 
-    #def init(self):
-    #    not necessary in that case
+    def _init(self):
+        Initializer.init()
 
-    def execute(self):
+    def _execute(self):
         Logger.info("Examining subtitle state...")
 
         base_path = '/shows'

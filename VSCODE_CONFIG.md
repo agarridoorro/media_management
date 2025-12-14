@@ -19,6 +19,7 @@ env\Scripts\activate.bat
 ```
 pip install requests
 pip install requests-cache
+pip install transmission-rpc
 ```
 
 * Use in vs the new created venv

@@ -1,7 +1,8 @@
-import os
+import json
 from threading import Lock
+from pathlib import Path
 from .log import Logger
-from . import *
+from .settings import CONFIG_PATH
 
 class SingletonMeta(type):
     _instances = {}
@@ -25,13 +26,19 @@ class Configuration(metaclass=SingletonMeta):
 
 class _CfgMap(object):
     def __init__(self, base_path, entity, relative_path):
+        self._values_dic = {}
+        self._file_name = Path(base_path) / entity / relative_path
         try:
-            self._values_dic = []
-            self._file_name = os.path.join(base_path, entity, relative_path)
-            with open(self._file_name, 'r') as dictionary_file:
-                self._values_dic = eval(dictionary_file.read())
+            with open(self._file_name, 'r', encoding='utf-8') as f:
+                self._values_dic = json.load(f)
+                if not isinstance(self._values_dic, dict):
+                    Logger.error("Config file[", self._file_name, "] does not contain a JSON object")
         except FileNotFoundError:
-            Logger.error("No config file found at [", self._file_name, "]")
+            Logger.error("No config file found at", self._file_name)
+        except json.JSONDecodeError as e:
+            Logger.error("Invalid JSON in", self._file_name, str(e))
+        except Exception as e:
+            Logger.error("Unexpected error reading", self._file_name, str(e))
         
     def get(self, key):
         try:

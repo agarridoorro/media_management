@@ -1,5 +1,5 @@
 from common.log import Logger
-from common.module import ModuleCreator
+from common.action_factory import ActionFactory
 
 Logger.info('Initializing modules...')
 
@@ -10,6 +10,5 @@ for line in lines:
         parts = line.split(' ')
         index_entry_point = parts.index('/app/entry_point.py')
         action_name = parts[index_entry_point + 1]
-        Logger.info("Initializing module", action_name)
-        module_creator = ModuleCreator(action_name)
-        module_creator.get_module()
+        action = ActionFactory.get_instance(action_name)
+        action.init()
